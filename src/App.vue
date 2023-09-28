@@ -16,7 +16,6 @@ export default {
     <form>
       <label>Inserisci il titolo del film</label><br>
       <input type="text" v-model="store.inputQuery">
-      <!-- <input type="text" v-model="store.movieRequest.params.query" v-model="store.movieRequest.params.query"> -->
       <button type="submit" @click.prevent="store.fetchData" placeholder="Cerca Titolo">Search</button>
     </form>
   </div>
@@ -27,13 +26,18 @@ export default {
       <ul v-if="store.movieList.length > 0">
         <li v-for="movie in store.movieList">
           <ol>
+            <li>
+              <img :src="movie.image" alt="">
+            </li>
             <li>{{ movie.title }}</li>
             <li>{{ movie.originalTitle }}</li>
             <li>
               <img :src="movie.countryFlag">
               {{ movie.language }}
             </li>
-            <li>{{ movie.vote }}</li>
+            <li>
+              <i v-for="n in movie.vote" class="fa fa-star"></i>
+            </li>
           </ol>
         </li>
       </ul>
@@ -45,20 +49,24 @@ export default {
       <ul v-if="store.seriesList.length > 0">
         <li v-for="movie in store.seriesList">
           <ol>
+            <li>
+              <img :src="movie.image" alt="">
+            </li>
             <li>{{ movie.title }}</li>
             <li>{{ movie.originalTitle }}</li>
             <li>
               <img :src="movie.countryFlag">
               {{ movie.language }}
             </li>
-            <li>{{ movie.vote }}</li>
+            <li>
+              <i v-for="n in movie.vote" class="fa fa-star"></i>
+            </li>
           </ol>
         </li>
       </ul>
       <div v-else>Non ci sono serie! 😞</div>
     </div>
   </div>
-  <!-- width="16" height="12"  -->
 </template>
 
 <style></style>
