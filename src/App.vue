@@ -16,7 +16,8 @@ export default {
     <form>
       <label>Inserisci il titolo del film</label><br>
       <input type="text" v-model="store.movieRequest.params.query">
-      <button type="submit" @click.prevent="store.fetchMovies" placeholder="Cerca Titolo">Search</button>
+      <!-- <input type="text" v-model="store.movieRequest.params.query" v-model="store.movieRequest.params.query"> -->
+      <button type="submit" @click.prevent="store.fetchData" placeholder="Cerca Titolo">Search</button>
     </form>
   </div>
   <div class="contents">
@@ -25,13 +26,17 @@ export default {
         <ol>
           <li>{{ movie.title }}</li>
           <li>{{ movie.originalTitle }}</li>
-          <li>{{ movie.language }}</li>
+          <li>
+            <img :src="movie.countryFlag">
+            {{ movie.language }}
+          </li>
           <li>{{ movie.vote }}</li>
         </ol>
       </li>
     </ul>
     <div v-else>Non ci sono film! 😞</div>
   </div>
+  <!-- width="16" height="12"  -->
 </template>
 
 <style></style>
