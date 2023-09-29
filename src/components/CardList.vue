@@ -23,7 +23,7 @@ export default {
         v-if="dataList.length > 0">
         <CardItem v-for="item in dataList" :item="item" />
     </div>
-    <div v-else class="text-center">Non ci sono film! 😞</div>
+    <h3 v-else class="text-center">Non ci sono film! 😞</h3>
 </template>
 
 
