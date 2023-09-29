@@ -25,6 +25,7 @@ export default {
                     <i v-for="n in item.vote" class="fa fa-star"></i>
                     <i v-for="n in (5 - item.vote)" class="fa fa-star-o"></i>
                 </div>
+                <div><strong>Cast: </strong> {{ item.cast }}</div>
                 <div v-if="item.overview !== ''"><strong>Overview: </strong>{{ item.overview }}</div>
                 <div v-else><strong>Overview: </strong> Overview unavailable</div>
             </div>

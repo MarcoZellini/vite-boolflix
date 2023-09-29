@@ -7,7 +7,8 @@ export const store = reactive({
     api_key: 'b5d1c2545fd5913c018a04b6cd2e056a', //we need this to make AJAX request
     inputQuery: null, //query
     movieList: [], //list of movies found,
-    seriesList: [], //list of series found,
+    seriesList: [], //list of series found
+    castList: [],
 
     /**
      * ### fetchData
@@ -38,6 +39,10 @@ export const store = reactive({
                 this.movieList = [];
 
                 response.data.results.forEach(element => {
+
+                    console.log(this.fetchActors(element.id));
+
+
                     this.movieList.push({
                         image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
                         title: element.title,
@@ -45,9 +50,13 @@ export const store = reactive({
                         language: element.original_language.toUpperCase(),
                         countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
                         vote: Math.ceil(element.vote_average / 2),
-                        overview: element.overview
+                        overview: element.overview,
+                        cast: []
                     })
+
                 });
+
+                // this.movieList.forEach(element => console.log(element))
 
             }).catch((error) => {
                 console.error(error);
@@ -81,7 +90,9 @@ export const store = reactive({
                         language: element.original_language.toUpperCase(),
                         countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
                         vote: Math.ceil(element.vote_average / 2),
-                        overview: element.overview
+                        overview: element.overview,
+                        // cast: this.fetchActors(element.id)
+                        cast: []
                     })
                 });
 
@@ -89,5 +100,38 @@ export const store = reactive({
                 console.error(error);
             });
 
+    },
+
+    /**
+     * ### fetchActors
+     * > This function does an AJAX Call and returns a list of max five actors/actress.
+     * @param {Number} item_id Movie or Series id
+     * @returns A list of max 5 actors/actress.
+     */
+    fetchActors(item_id) {
+        const actors = [];
+        axios
+            .request({
+                method: 'GET',
+                url: `https://api.themoviedb.org/3/movie/${item_id}/credits`,
+                params: {
+                    api_key: this.api_key
+                }
+            })
+            .then(response => {
+                let i = 0;
+                while (actors.length < 5 && i < response.data.cast.length) {
+                    const castMember = response.data.cast[i]
+                    if (castMember.known_for_department.toLowerCase() === 'acting') {
+                        actors.push(castMember.name);
+                    }
+                    i++;
+                }
+                console.log('Actors: ', actors);
+            })
+            .catch(error => {
+                console.error(error)
+            })
+        return actors;
     }
 })
