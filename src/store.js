@@ -35,31 +35,26 @@ export const store = reactive({
                 }
             })
             .then((response) => {
-
                 this.movieList = [];
 
                 response.data.results.forEach(element => {
-
-                    console.log(this.fetchActors(element.id));
-
-
-                    this.movieList.push({
-                        image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
-                        title: element.title,
-                        originalTitle: element.original_title,
-                        language: element.original_language.toUpperCase(),
-                        countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
-                        vote: Math.ceil(element.vote_average / 2),
-                        overview: element.overview,
-                        cast: []
-                    })
-
+                    this.fetchActors(element.id)
+                        .then(actors => {
+                            // console.log('cc', actors);
+                            this.movieList.push({
+                                image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
+                                title: element.title,
+                                originalTitle: element.original_title,
+                                language: element.original_language.toUpperCase(),
+                                countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
+                                vote: Math.ceil(element.vote_average / 2),
+                                overview: element.overview,
+                                cast: actors.toString()
+                            })
+                        })
                 });
-
-                // this.movieList.forEach(element => console.log(element))
-
             }).catch((error) => {
-                console.error(error);
+                // console.error(error);
             });
     },
 
@@ -83,21 +78,25 @@ export const store = reactive({
                 this.seriesList = [];
 
                 response.data.results.forEach(element => {
-                    this.seriesList.push({
-                        image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
-                        title: element.name,
-                        originalTitle: element.original_name,
-                        language: element.original_language.toUpperCase(),
-                        countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
-                        vote: Math.ceil(element.vote_average / 2),
-                        overview: element.overview,
-                        // cast: this.fetchActors(element.id)
-                        cast: []
-                    })
+
+                    this.fetchActors(element.id)
+                        .then(actors => {
+                            this.seriesList.push({
+                                image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
+                                title: element.name,
+                                originalTitle: element.original_name,
+                                language: element.original_language.toUpperCase(),
+                                countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
+                                vote: Math.ceil(element.vote_average / 2),
+                                overview: element.overview,
+                                cast: actors.toString()
+
+                            })
+                        })
                 });
 
             }).catch((error) => {
-                console.error(error);
+                // console.error(error);
             });
 
     },
@@ -108,9 +107,9 @@ export const store = reactive({
      * @param {Number} item_id Movie or Series id
      * @returns A list of max 5 actors/actress.
      */
-    fetchActors(item_id) {
-        const actors = [];
-        axios
+    async fetchActors(item_id) {
+        const actors = []
+        await axios
             .request({
                 method: 'GET',
                 url: `https://api.themoviedb.org/3/movie/${item_id}/credits`,
@@ -127,10 +126,10 @@ export const store = reactive({
                     }
                     i++;
                 }
-                console.log('Actors: ', actors);
+                // console.log('Actors: ', actors);
             })
             .catch(error => {
-                console.error(error)
+                // console.error(error)
             })
         return actors;
     }
