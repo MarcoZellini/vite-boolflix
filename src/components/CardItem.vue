@@ -12,7 +12,8 @@ export default {
 <template>
     <div class="col">
         <div class="card">
-            <img class="poster" :src="item.image" alt="">
+            <img class="poster" :src="item.image" v-if="item.image !== 'https://image.tmdb.org/t/p/w342/null'">
+            <img class="poster" src="../assets/img/404.jpeg" v-else>
             <div class="info">
                 <div><strong>Title: </strong>{{ item.title }}</div>
                 <div><strong>Original Title: </strong>{{ item.originalTitle }}</div>
