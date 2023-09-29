@@ -34,7 +34,7 @@ export const store = reactive({
                 }
             })
             .then((response) => {
-                console.log(response.data.results[0]);
+
                 this.movieList = [];
 
                 response.data.results.forEach(element => {
@@ -44,7 +44,8 @@ export const store = reactive({
                         originalTitle: element.original_title,
                         language: element.original_language.toUpperCase(),
                         countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
-                        vote: Math.ceil(element.vote_average / 2)
+                        vote: Math.ceil(element.vote_average / 2),
+                        overview: element.overview
                     })
                 });
 
@@ -69,7 +70,6 @@ export const store = reactive({
                 }
             })
             .then((response) => {
-                console.log(response.data.results[0]);
 
                 this.seriesList = [];
 
@@ -80,7 +80,8 @@ export const store = reactive({
                         originalTitle: element.original_name,
                         language: element.original_language.toUpperCase(),
                         countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
-                        vote: Math.ceil(element.vote_average / 2)
+                        vote: Math.ceil(element.vote_average / 2),
+                        overview: element.overview
                     })
                 });
 
