@@ -27,6 +27,8 @@ export default {
                 </div>
                 <div v-if="item.cast != ''"><strong>Cast: </strong> {{ item.cast }}</div>
                 <div v-else><strong>Cast: </strong>Member not found</div>
+                <div v-if="item.genres != ''"><strong>Genres: </strong> {{ item.genres }}</div>
+                <div v-else><strong>genres: </strong>Genres not found</div>
                 <div v-if="item.overview !== ''"><strong>Overview: </strong>{{ item.overview }}</div>
                 <div v-else><strong>Overview: </strong> Overview unavailable</div>
             </div>

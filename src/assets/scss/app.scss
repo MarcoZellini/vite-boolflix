@@ -60,6 +60,8 @@
 
         .row {
             justify-content: center;
+            /* flex-wrap: nowrap;
+            min-width: 100vw; */
             flex-wrap: wrap;
 
             .card {

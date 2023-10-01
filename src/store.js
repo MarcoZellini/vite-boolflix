@@ -17,6 +17,7 @@ export const store = reactive({
     fetchData() {
         this.fetchMovies();
         this.fetchSeries();
+        this.inputQuery = '';
     },
 
 
@@ -40,17 +41,22 @@ export const store = reactive({
                 response.data.results.forEach(element => {
                     this.fetchActors(element.id)
                         .then(actors => {
-                            // console.log('cc', actors);
-                            this.movieList.push({
-                                image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
-                                title: element.title,
-                                originalTitle: element.original_title,
-                                language: element.original_language.toUpperCase(),
-                                countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
-                                vote: Math.ceil(element.vote_average / 2),
-                                overview: element.overview,
-                                cast: actors.toString()
-                            })
+                            this.fetchMovieGenres(element.id)
+                                .then(genres => {
+                                    console.log(genres);
+                                    this.movieList.push({
+                                        image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
+                                        title: element.title,
+                                        originalTitle: element.original_title,
+                                        language: element.original_language.toUpperCase(),
+                                        countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
+                                        vote: Math.ceil(element.vote_average / 2),
+                                        overview: element.overview,
+                                        cast: actors.toString(),
+                                        genres: genres.toString()
+                                    })
+                                })
+
                         })
                 });
             }).catch((error) => {
@@ -81,17 +87,20 @@ export const store = reactive({
 
                     this.fetchActors(element.id)
                         .then(actors => {
-                            this.seriesList.push({
-                                image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
-                                title: element.name,
-                                originalTitle: element.original_name,
-                                language: element.original_language.toUpperCase(),
-                                countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
-                                vote: Math.ceil(element.vote_average / 2),
-                                overview: element.overview,
-                                cast: actors.toString()
-
-                            })
+                            this.fetchSeriesGenres(element.id)
+                                .then(genres => {
+                                    this.seriesList.push({
+                                        image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
+                                        title: element.name,
+                                        originalTitle: element.original_name,
+                                        language: element.original_language.toUpperCase(),
+                                        countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
+                                        vote: Math.ceil(element.vote_average / 2),
+                                        overview: element.overview,
+                                        cast: actors.toString(),
+                                        genres: genres.toString()
+                                    })
+                                })
                         })
                 });
 
@@ -126,11 +135,50 @@ export const store = reactive({
                     }
                     i++;
                 }
-                // console.log('Actors: ', actors);
             })
             .catch(error => {
                 // console.error(error)
             })
         return actors;
+    },
+
+    async fetchMovieGenres(item_id) {
+        const genres = [];
+        await axios
+            .request({
+                method: 'GET',
+                url: `https://api.themoviedb.org/3/movie/${item_id}`,
+                params: {
+                    api_key: this.api_key
+                }
+            })
+            .then(response => {
+                response.data.genres.forEach(element => genres.push(element.name))
+            })
+            .catch(error => {
+                // console.error(error);
+            })
+        return genres;
+    },
+
+    async fetchSeriesGenres(item_id) {
+        const genres = [];
+        await axios
+            .request({
+                method: 'GET',
+                url: `https://api.themoviedb.org/3/tv/${item_id}`,
+                params: {
+                    api_key: this.api_key
+                }
+            })
+            .then(response => {
+                response.data.genres.forEach(element => genres.push(element.name))
+            })
+            .catch(error => {
+                // console.error(error);
+            })
+        return genres;
     }
 })
+
+
