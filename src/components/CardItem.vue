@@ -15,12 +15,18 @@ export default {
             <img class="poster" :src="item.image" v-if="item.image !== 'https://image.tmdb.org/t/p/w342/null'">
             <div class="alt-poster" v-else>404 image not found</div>
             <div class="info">
-                <div class="item_title"><strong>Title: </strong>{{ item.title }}</div>
-                <div class="item_original_title"><strong>Original Title: </strong>{{ item.originalTitle }}</div>
+
+                <div class="item_titles" v-if="item.title !== item.originalTitle">
+                    <div class="item_title"><strong>Title: </strong>{{ item.title }}</div>
+                    <div class="item_original_title"><strong>Original Title: </strong>{{ item.originalTitle }}</div>
+                </div>
+                <div class="item_title" v-else><strong>Title: </strong>{{ item.title }}</div>
+
                 <div class="item_country_flag">
                     <img :src="item.countryFlag">
                     <strong>{{ item.language }}</strong>
                 </div>
+
                 <div class="item_vote">
                     <i v-for="n in item.vote" class="fa fa-star"></i>
                     <i v-for="n in (5 - item.vote)" class="fa fa-star-o"></i>

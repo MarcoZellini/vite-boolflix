@@ -28,6 +28,8 @@
         background-color: black;
         padding: .75rem 0;
 
+
+
         #search_bar {
             display: flex;
             flex-direction: column;
@@ -38,12 +40,23 @@
                 text-transform: uppercase;
             }
 
-            input {
+            input,
+            .filters,
+            button {
                 border: none;
+                border-radius: 10px 0 0 10px;
+                padding-left: .25rem;
+                height: 26px;
+            }
+
+            .filters {
+                margin-right: 1rem;
+                border-radius: 10px;
+                padding-left: .25rem;
             }
 
             button {
-                border: none;
+                border-radius: 0 10px 10px 0;
                 border-left: 1px solid gray;
             }
         }
