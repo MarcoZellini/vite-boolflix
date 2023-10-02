@@ -43,7 +43,6 @@ export const store = reactive({
                         .then(actors => {
                             this.fetchMovieGenres(element.id)
                                 .then(genres => {
-                                    console.log(genres);
                                     this.movieList.push({
                                         image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
                                         title: element.title,
@@ -52,8 +51,8 @@ export const store = reactive({
                                         countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
                                         vote: Math.ceil(element.vote_average / 2),
                                         overview: element.overview,
-                                        cast: actors.toString(),
-                                        genres: genres.toString()
+                                        cast: actors,
+                                        genres: genres,
                                     })
                                 })
 
@@ -97,8 +96,8 @@ export const store = reactive({
                                         countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
                                         vote: Math.ceil(element.vote_average / 2),
                                         overview: element.overview,
-                                        cast: actors.toString(),
-                                        genres: genres.toString()
+                                        cast: actors,
+                                        genres: genres,
                                     })
                                 })
                         })
@@ -153,7 +152,7 @@ export const store = reactive({
                 }
             })
             .then(response => {
-                response.data.genres.forEach(element => genres.push(element.name))
+                response.data.genres.forEach(element => genres.push(element));
             })
             .catch(error => {
                 // console.error(error);
@@ -172,7 +171,7 @@ export const store = reactive({
                 }
             })
             .then(response => {
-                response.data.genres.forEach(element => genres.push(element.name))
+                response.data.genres.forEach(element => genres.push(element));
             })
             .catch(error => {
                 // console.error(error);
