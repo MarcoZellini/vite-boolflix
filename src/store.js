@@ -9,6 +9,8 @@ export const store = reactive({
     movieList: [], //list of movies found,
     seriesList: [], //list of series found
     castList: [],
+    genreList: [],
+    inputGenre: '',
 
     /**
      * ### fetchData
@@ -17,7 +19,7 @@ export const store = reactive({
     fetchData() {
         this.fetchMovies();
         this.fetchSeries();
-        this.inputQuery = '';
+        // this.inputQuery = '';
     },
 
 
@@ -37,26 +39,25 @@ export const store = reactive({
             })
             .then((response) => {
                 this.movieList = [];
-
                 response.data.results.forEach(element => {
-                    this.fetchActors(element.id)
-                        .then(actors => {
-                            this.fetchMovieGenres(element.id)
-                                .then(genres => {
-                                    this.movieList.push({
-                                        image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
-                                        title: element.title,
-                                        originalTitle: element.original_title,
-                                        language: element.original_language.toUpperCase(),
-                                        countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
-                                        vote: Math.ceil(element.vote_average / 2),
-                                        overview: element.overview,
-                                        cast: actors,
-                                        genres: genres,
-                                    })
+                    this.fetchActors(element.id).then(actors => {
+                        this.fetchMovieGenres(element.id).then(genres => {
+                            if (element.genre_ids.includes(this.inputGenre) || this.inputGenre === '') {
+                                this.movieList.push({
+                                    image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
+                                    title: element.title,
+                                    originalTitle: element.original_title,
+                                    language: element.original_language.toUpperCase(),
+                                    countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
+                                    vote: Math.ceil(element.vote_average / 2),
+                                    overview: element.overview,
+                                    cast: actors,
+                                    genres: genres,
                                 })
-
+                            }
                         })
+                    })
+
                 });
             }).catch((error) => {
                 // console.error(error);
@@ -79,28 +80,28 @@ export const store = reactive({
                 }
             })
             .then((response) => {
-
                 this.seriesList = [];
 
                 response.data.results.forEach(element => {
-
-                    this.fetchActors(element.id)
-                        .then(actors => {
-                            this.fetchSeriesGenres(element.id)
-                                .then(genres => {
-                                    this.seriesList.push({
-                                        image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
-                                        title: element.name,
-                                        originalTitle: element.original_name,
-                                        language: element.original_language.toUpperCase(),
-                                        countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
-                                        vote: Math.ceil(element.vote_average / 2),
-                                        overview: element.overview,
-                                        cast: actors,
-                                        genres: genres,
-                                    })
+                    this.fetchActors(element.id).then(actors => {
+                        this.fetchSeriesGenres(element.id).then(genres => {
+                            if (element.genre_ids.includes(this.inputGenre) || this.inputGenre === '') {
+                                this.seriesList.push({
+                                    image: 'https://image.tmdb.org/t/p/w342/' + element.poster_path,
+                                    title: element.name,
+                                    originalTitle: element.original_name,
+                                    language: element.original_language.toUpperCase(),
+                                    countryFlag: `https://flagcdn.com/32x24/${countryCodes[element.original_language]}.png`,
+                                    vote: Math.ceil(element.vote_average / 2),
+                                    overview: element.overview,
+                                    cast: actors,
+                                    genres: genres,
                                 })
+                            }
                         })
+
+                    })
+
                 });
 
             }).catch((error) => {
@@ -177,7 +178,42 @@ export const store = reactive({
                 // console.error(error);
             })
         return genres;
+    },
+
+    getAllGenres() {
+
+        Promise.all([
+            axios.request({
+                url: 'https://api.themoviedb.org/3/genre/movie/list',
+                params: {
+                    api_key: this.api_key
+                }
+            }),
+
+            axios.request({
+                url: 'https://api.themoviedb.org/3/genre/tv/list',
+                params: {
+                    api_key: this.api_key
+                }
+            })
+
+        ]).then(([movieGenres, seriesGenres]) => {
+            const idList = [];
+
+            movieGenres.data.genres.forEach(movieGenre => {
+                this.genreList.push(movieGenre)
+                idList.push(movieGenre.id)
+            });
+
+            seriesGenres.data.genres.forEach(seriesGenre => {
+                if (!idList.includes(seriesGenre.id)) {
+                    this.genreList.push(seriesGenre)
+                }
+            });
+
+            this.genreList.sort((a, b) => a.name.localeCompare(b.name));
+        });
     }
-})
+});
 
 

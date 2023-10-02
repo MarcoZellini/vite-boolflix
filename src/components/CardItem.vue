@@ -38,8 +38,8 @@ export default {
                 <div class="item_genres" v-if="item.genres.length > 0">
                     <strong>Genres: </strong>
                     <template v-for="(genre, i) in item.genres">
-                        <span v-if="i < item.genres.length">{{ `${genre.name}, ` }}</span>
-                        <span>{{ genre.name }}</span>
+                        <span v-if="(i + 1) < item.genres.length">{{ `${genre.name}, ` }}</span>
+                        <span v-else>{{ genre.name }}</span>
                     </template>
                 </div>
                 <div class="item_genres" v-else><strong>genres: </strong>Genres not found</div>

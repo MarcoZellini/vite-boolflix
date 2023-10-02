@@ -11,19 +11,28 @@ export default {
     },
     components: {
         CardList,
+    },
+    created() {
+        store.getAllGenres();
     }
 }
 </script>
 
 <template>
     <main id="app_main">
-        <div class="container-sm contents"
-            :class="(store.movieList.length === 0) && (store.seriesList.length === 0) ? 'd-flex' : ''">
-            <div class="films" :class="store.movieList.length === 0 ? 'w-50' : ''">
+        <div class="container">
+            <select v-model="store.inputGenre" @change="store.fetchData">
+                <option value="" disabled selected>Filters..</option>
+                <option value="">All</option>
+                <option v-for="genre in store.genreList" :value="genre.id">{{ genre.name }}</option>
+            </select>
+        </div>
+        <div class="container-sm contents">
+            <div class="films">
                 <h2 class="section_title text-center w-100">Film</h2>
                 <CardList :data-list="store.movieList" />
             </div>
-            <div class="series" :class="store.seriesList.length === 0 ? 'w-50' : ''">
+            <div class="series">
                 <h2 class="section_title text-center w-100">Series</h2>
                 <CardList :data-list="store.seriesList" />
             </div>
